@@ -35,10 +35,10 @@ def build_matrix(field, vectors, multipliable):
             available_cells = []
             for point in available_points:
                 available_cells.append(
-                    int(field.point(point.x, point.y)))
+                    int(field.point(point)))
 
             available_matrix[
-                int(field.point(x, y))] = available_cells
+                int(field.point(Point(x, y)))] = available_cells
 
     return available_matrix
 

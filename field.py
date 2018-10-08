@@ -6,10 +6,10 @@ class Field:
     def points(self):
         return self._points
 
-    def point(self, x, y):
-        return self._points[y][x] if \
-            y < len(self._points) and \
-            x < len(self._points[y]) else None
+    def point(self, point):
+        return self._points[point.y][point.x] if \
+            point.y < len(self._points) and \
+            point.x < len(self._points[point.y]) else None
 
     def is_point_valid(self, point):
         return 0 <= point.y < len(self._points) \
