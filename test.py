@@ -1,24 +1,28 @@
 from random import randint
 from figure import *
+from field import *
 
 
+# create field
 def get_field():
-    return [
-        ['1', '2', '3'],
-        ['4', '5', '6'],
-        ['7', '8', '9'],
-        ['*', '0', '#'],
-    ]
+    return Field(
+        [
+            ['1', '2', '3'],
+            ['4', '5', '6'],
+            ['7', '8', '9'],
+            ['*', '0', '#'],
+        ]
+    )
 
 
 # rebuild available matrix for the field
 def build_matrix(field, vectors, multipliable):
     available_matrix = list(range(10))
 
-    for y in range(len(field)):
-        for x in range(len(field[y])):
+    for y in range(len(field.points)):
+        for x in range(len(field.points[y])):
             point = (x, y)
-            if not is_point_valid(field, point):
+            if not field.is_point_valid(point):
                 continue
 
             available_points = []
@@ -30,10 +34,10 @@ def build_matrix(field, vectors, multipliable):
             available_cells = []
             for point in available_points:
                 available_cells.append(
-                    int(field[point[1]][point[0]]))
+                    int(field.point(point[0], point[1])))
 
             available_matrix[
-                int(field[y][x])] = available_cells
+                int(field.point(x, y))] = available_cells
 
     return available_matrix
 
@@ -43,7 +47,7 @@ def build_matrix(field, vectors, multipliable):
 def get_available_points(field, point, vector, multipliable):
     new_point = get_next_point(point, vector)
 
-    if not is_point_valid(field, new_point):
+    if not field.is_point_valid(new_point):
         return list()
 
     else:
@@ -62,16 +66,6 @@ def get_next_point(point, vector):
             point[1] + vector[1])
 
 
-# check point validity
-def is_point_valid(field, point):
-    x, y = point[0], point[1]
-
-    return 0 <= y < len(field) \
-        and 0 <= x < len(field[y]) \
-        and field[y][x].isdigit()
-
-
-# initial function for rebuild movements matrix
 def generate_paths(field, figures):
     for figure in figures:
         figure.path_matrix = \
