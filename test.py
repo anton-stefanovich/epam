@@ -2,51 +2,6 @@ from random import randint
 from figure import *
 
 
-def get_figures():
-    return [
-        Figure(
-            name='bishop',
-            offset=[
-                (1, 1), (-1, -1),
-                (1, -1), (-1, 1)],
-            is_multipliable=True),
-
-        Figure(
-            name='rook',
-            offset=[
-                (1, 0), (-1, 0),
-                (0, 1), (0, -1)],
-            is_multipliable=True),
-
-        Figure(
-            name='knight',
-            offset=[
-                (2, 1), (2, -1),
-                (-2, 1), (-2, -1),
-                (1, 2), (1, -2),
-                (-1, 2), (-1, -2)],
-            is_multipliable=False),
-
-        Figure(
-            name='king',
-            offset=[
-                (1, 0), (-1, 0),
-                (0, 1), (0, -1),
-                (1, 1), (-1, -1),
-                (-1, 1), (1, -1)],
-            is_multipliable=False),
-
-        Figure(
-            name='queen',
-            offset=[
-                (1, 0), (-1, 0),
-                (0, 1), (0, -1),
-                (1, 1), (-1, -1),
-                (-1, 1), (1, -1)],
-            is_multipliable=True),
-    ]
-
-
 def get_field():
     return [
         ['1', '2', '3'],
@@ -165,7 +120,7 @@ def magic_func(current, figure, length):
 
 def main():
     # get all known figures
-    figures = get_figures()
+    figures = Figure.get_known_figures()
 
     # get task field
     field = get_field()

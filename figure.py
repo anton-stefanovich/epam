@@ -27,3 +27,48 @@ class Figure:
     @path_matrix.setter
     def path_matrix(self, path_matrix: list):
         self._path_matrix = path_matrix
+
+    @staticmethod
+    def get_known_figures():
+        return [
+            Figure(
+                name='bishop',
+                offset=[
+                    (1, 1), (-1, -1),
+                    (1, -1), (-1, 1)],
+                is_multipliable=True),
+
+            Figure(
+                name='rook',
+                offset=[
+                    (1, 0), (-1, 0),
+                    (0, 1), (0, -1)],
+                is_multipliable=True),
+
+            Figure(
+                name='knight',
+                offset=[
+                    (2, 1), (2, -1),
+                    (-2, 1), (-2, -1),
+                    (1, 2), (1, -2),
+                    (-1, 2), (-1, -2)],
+                is_multipliable=False),
+
+            Figure(
+                name='king',
+                offset=[
+                    (1, 0), (-1, 0),
+                    (0, 1), (0, -1),
+                    (1, 1), (-1, -1),
+                    (-1, 1), (1, -1)],
+                is_multipliable=False),
+
+            Figure(
+                name='queen',
+                offset=[
+                    (1, 0), (-1, 0),
+                    (0, 1), (0, -1),
+                    (1, 1), (-1, -1),
+                    (-1, 1), (1, -1)],
+                is_multipliable=True),
+        ]
