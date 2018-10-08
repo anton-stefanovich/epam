@@ -1,6 +1,7 @@
 from random import randint
 from figure import *
 from field import *
+from point import *
 
 
 # create field
@@ -21,7 +22,7 @@ def build_matrix(field, vectors, multipliable):
 
     for y in range(len(field.points)):
         for x in range(len(field.points[y])):
-            point = (x, y)
+            point = Point(x, y)
             if not field.is_point_valid(point):
                 continue
 
@@ -29,12 +30,12 @@ def build_matrix(field, vectors, multipliable):
             for vector in vectors:
                 available_points.extend(
                     get_available_points(
-                        field, (x, y), vector, multipliable))
+                        field, Point(x, y), vector, multipliable))
 
             available_cells = []
             for point in available_points:
                 available_cells.append(
-                    int(field.point(point[0], point[1])))
+                    int(field.point(point.x, point.y)))
 
             available_matrix[
                 int(field.point(x, y))] = available_cells
@@ -44,8 +45,8 @@ def build_matrix(field, vectors, multipliable):
 
 # get available point from vector and multipliable property
 # start from one point, return all available points
-def get_available_points(field, point, vector, multipliable):
-    new_point = get_next_point(point, vector)
+def get_available_points(field, point, offset, multipliable):
+    new_point = point.next(offset)
 
     if not field.is_point_valid(new_point):
         return list()
@@ -53,17 +54,11 @@ def get_available_points(field, point, vector, multipliable):
     else:
         next_points = \
             get_available_points(
-                field, new_point, vector, multipliable) \
+                field, new_point, offset, multipliable) \
             if multipliable else list()
 
         next_points.append(new_point)
         return next_points
-
-
-# get one next point based on current point and vector
-def get_next_point(point, vector):
-    return (point[0] + vector[0],
-            point[1] + vector[1])
 
 
 def generate_paths(field, figures):

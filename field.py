@@ -12,8 +12,6 @@ class Field:
             x < len(self._points[y]) else None
 
     def is_point_valid(self, point):
-        x, y = point[0], point[1]
-
-        return 0 <= y < len(self._points) \
-            and 0 <= x < len(self._points[y]) \
-            and self._points[y][x].isdigit()
+        return 0 <= point.y < len(self._points) \
+            and 0 <= point.x < len(self._points[point.y]) \
+            and self._points[point.y][point.x].isdigit()

@@ -1,8 +1,11 @@
+from point import Offset
+
+
 class Figure:
 
-    def __init__(self, name, offset, is_multipliable):
+    def __init__(self, name, offsets, is_multipliable):
         self._name = name
-        self._offset = offset
+        self._offsets = offsets
         self._is_multipliable = is_multipliable
 
         # empty path_matrix on initial state
@@ -14,7 +17,7 @@ class Figure:
 
     @property
     def offset(self):
-        return self._offset
+        return self._offsets
 
     @property
     def is_multipliable(self):
@@ -33,42 +36,58 @@ class Figure:
         return [
             Figure(
                 name='bishop',
-                offset=[
-                    (1, 1), (-1, -1),
-                    (1, -1), (-1, 1)],
+                offsets=[
+                    Offset(1, 1),
+                    Offset(1, -1),
+                    Offset(-1, 1),
+                    Offset(-1, -1)],
                 is_multipliable=True),
 
             Figure(
                 name='rook',
-                offset=[
-                    (1, 0), (-1, 0),
-                    (0, 1), (0, -1)],
+                offsets=[
+                    Offset(1, 0),
+                    Offset(0, 1),
+                    Offset(-1, 0),
+                    Offset(0, -1)],
                 is_multipliable=True),
 
             Figure(
                 name='knight',
-                offset=[
-                    (2, 1), (2, -1),
-                    (-2, 1), (-2, -1),
-                    (1, 2), (1, -2),
-                    (-1, 2), (-1, -2)],
+                offsets=[
+                    Offset(2, 1),
+                    Offset(1, 2),
+                    Offset(1, -2),
+                    Offset(2, -1),
+                    Offset(-1, 2),
+                    Offset(-2, 1),
+                    Offset(-2, -1),
+                    Offset(-1, -2)],
                 is_multipliable=False),
 
             Figure(
                 name='king',
-                offset=[
-                    (1, 0), (-1, 0),
-                    (0, 1), (0, -1),
-                    (1, 1), (-1, -1),
-                    (-1, 1), (1, -1)],
+                offsets=[
+                    Offset(1, 0),
+                    Offset(0, 1),
+                    Offset(0, 1),
+                    Offset(1, 1),
+                    Offset(-1, 0),
+                    Offset(-1, 1),
+                    Offset(1, -1),
+                    Offset(-1, -1)],
                 is_multipliable=False),
 
             Figure(
                 name='queen',
-                offset=[
-                    (1, 0), (-1, 0),
-                    (0, 1), (0, -1),
-                    (1, 1), (-1, -1),
-                    (-1, 1), (1, -1)],
+                offsets=[
+                    Offset(1, 0),
+                    Offset(0, 1),
+                    Offset(1, 1),
+                    Offset(0, -1),
+                    Offset(-1, 0),
+                    Offset(1, -1),
+                    Offset(-1, 1),
+                    Offset(-1, -1)],
                 is_multipliable=True),
         ]
