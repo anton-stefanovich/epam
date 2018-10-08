@@ -1,4 +1,3 @@
-from random import randint
 from figure import *
 from field import *
 from point import *
@@ -12,33 +11,34 @@ def get_field():
             ['4', '5', '6'],
             ['7', '8', '9'],
             ['*', '0', '#'],
-        ]
+        ],
+        lambda x: x.isdigit()
     )
 
 
 # rebuild available matrix for the field
 def build_matrix(field, vectors, multipliable):
-    available_matrix = list(range(10))
+    available_matrix = dict()
 
     for y in range(len(field.points)):
         for x in range(len(field.points[y])):
             point = Point(x, y)
-            if not field.is_point_valid(point):
-                continue
-
-            available_points = []
-            for vector in vectors:
-                available_points.extend(
-                    get_available_points(
-                        field, Point(x, y), vector, multipliable))
-
             available_cells = []
-            for point in available_points:
-                available_cells.append(
-                    int(field.point(point)))
+
+            if field.is_point_valid(point):
+                available_points = []
+                for vector in vectors:
+                    available_points.extend(
+                        get_available_points(
+                            field, Point(x, y),
+                            vector, multipliable))
+
+                for point in available_points:
+                    available_cells.append(
+                        field.point(point))
 
             available_matrix[
-                int(field.point(Point(x, y)))] = available_cells
+                field.point(Point(x, y))] = available_cells
 
     return available_matrix
 
@@ -66,10 +66,8 @@ def generate_paths(field, figures):
         figure.path_matrix = \
             build_matrix(
                 field,
-                figure.offset,
+                figure.offsets,
                 figure.is_multipliable)
-
-    print('=== Matrix rebuild completed ===')
 
 
 # calculate all path for all available figures
@@ -95,9 +93,10 @@ def start(figures, start_point):
 # step by step (recursively)
 def magic_func(current, figure, length):
     results = []
-    for next_pos in figure.path_matrix[current[-1]]:
+    next_points = figure.path_matrix.get(current[-1])
+    for next_point in next_points:
         sequence = current.copy()
-        sequence.append(next_pos)
+        sequence.append(next_point)
 
         results += (
             [sequence]
@@ -119,7 +118,7 @@ def main():
     generate_paths(field, figures)
 
     # generate random start point
-    start_point = randint(0, 9)
+    start_point = field.random_point()
 
     # launch path calculation
     # based on generated path matrix

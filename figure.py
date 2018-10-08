@@ -16,7 +16,7 @@ class Figure:
         return self._name
 
     @property
-    def offset(self):
+    def offsets(self):
         return self._offsets
 
     @property
@@ -28,7 +28,7 @@ class Figure:
         return self._path_matrix
 
     @path_matrix.setter
-    def path_matrix(self, path_matrix: list):
+    def path_matrix(self, path_matrix: dict):
         self._path_matrix = path_matrix
 
     @staticmethod
