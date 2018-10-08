@@ -1,97 +1,59 @@
 from random import randint
+from figure import *
 
-figures_next = {
-    'bishop': {
-        'vectors': [
-            (1, 1), (-1, -1),
-            (1, -1), (-1, 1)],
-        'multipliable': True,
-    },
 
-    'rook': {
-        'vectors': [
-            (1, 0), (-1, 0),
-            (0, 1), (0, -1)],
-        'multipliable': True,
-    },
+def get_figures():
+    return [
+        Figure(
+            name='bishop',
+            offset=[
+                (1, 1), (-1, -1),
+                (1, -1), (-1, 1)],
+            is_multipliable=True),
 
-    'knight': {
-        'vectors': [
-            (2, 1), (2, -1),
-            (-2, 1), (-2, -1),
-            (1, 2), (1, -2),
-            (-1, 2), (-1, -2)],
-        'multipliable': False,
-    },
+        Figure(
+            name='rook',
+            offset=[
+                (1, 0), (-1, 0),
+                (0, 1), (0, -1)],
+            is_multipliable=True),
 
-    'king': {
-        'vectors': [
-            (1, 0), (-1, 0),
-            (0, 1), (0, -1),
-            (1, 1), (-1, -1),
-            (-1, 1), (1, -1)],
-        'multipliable': False,
-    },
+        Figure(
+            name='knight',
+            offset=[
+                (2, 1), (2, -1),
+                (-2, 1), (-2, -1),
+                (1, 2), (1, -2),
+                (-1, 2), (-1, -2)],
+            is_multipliable=False),
 
-    'queen': {
-        'vectors': [
-            (1, 0), (-1, 0),
-            (0, 1), (0, -1),
-            (1, 1), (-1, -1),
-            (-1, 1), (1, -1)],
-        'multipliable': True,
-    },
-}
+        Figure(
+            name='king',
+            offset=[
+                (1, 0), (-1, 0),
+                (0, 1), (0, -1),
+                (1, 1), (-1, -1),
+                (-1, 1), (1, -1)],
+            is_multipliable=False),
 
-figures = {
-    'queen': [
-        # 0:
-        [8, 5, 2],
-        # [7, 9, 8, 5, 2],
-        # 1:
-        [2, 3, 4, 7, 5, 9],
-        # 2:
-        [1, 3, 5, 8, 0],
-        # [1, 3, 5, 8, 0, 4, 6],
-        # 3:
-        [2, 1, 6, 9, 5, 7],
-        # 4:
-        [1, 2, 5, 6, 8, 7],
-        # 5:
-        [1, 2, 3, 4, 6, 7, 8, 0, 9],
-        # 6:
-        [3, 2, 5, 4, 8, 9],
-        # 7:
-        [4, 1, 5, 3, 8, 9, 0],
-        # 8:
-        [7, 4, 5, 2, 6, 9, 0],
-        # 9:
-        [8, 7, 5, 1, 6, 3, 0],
-    ],
-
-    'king': [
-        # 0:
-        [7, 8, 9],
-        # 1:
-        [2, 5, 4],
-        # 2:
-        [1, 4, 5, 6, 3],
-        # 3:
-        [2, 5, 6],
-        # 4:
-        [1, 2, 5, 8, 7],
-        # 5:
-        [1, 2, 3, 4, 6, 7, 8, 9],
-        # 6:
-        [3, 2, 5, 8, 9],
-        # 7:
-        [4, 5, 8, 0],
-        # 8:
-        [4, 5, 6, 7, 9, 0],
-        # 9:
-        [6, 5, 8, 0],
+        Figure(
+            name='queen',
+            offset=[
+                (1, 0), (-1, 0),
+                (0, 1), (0, -1),
+                (1, 1), (-1, -1),
+                (-1, 1), (1, -1)],
+            is_multipliable=True),
     ]
-}
+
+
+def get_field():
+    return [
+        ['1', '2', '3'],
+        ['4', '5', '6'],
+        ['7', '8', '9'],
+        ['*', '0', '#'],
+    ]
 
 
 # rebuild available matrix for the field
@@ -154,34 +116,20 @@ def is_point_valid(field, point):
         and field[y][x].isdigit()
 
 
-# 1   2   3
-# 4   5   6
-# 7   8   9
-# *   0   #
-
 # initial function for rebuild movements matrix
-def rebuild_matrix():
-    figures.clear()  # !!!!!!!!!
-
-    field = [
-        ['1', '2', '3'],
-        ['4', '5', '6'],
-        ['7', '8', '9'],
-        ['*', '0', '#'],
-    ]
-
-    for figure in figures_next:
-        figures[figure] = \
+def generate_paths(field, figures):
+    for figure in figures:
+        figure.path_matrix = \
             build_matrix(
                 field,
-                figures_next.get(figure).get('vectors'),
-                figures_next.get(figure).get('multipliable'))
+                figure.offset,
+                figure.is_multipliable)
 
     print('=== Matrix rebuild completed ===')
 
 
 # calculate all path for all available figures
-def main(start_point):
+def start(figures, start_point):
     print('Start point: %s' % start_point)
 
     for figure in figures:
@@ -191,7 +139,8 @@ def main(start_point):
             7,              # max path length
         )
 
-        print('Figure: \'%s\', ways: %d' % (figure, len(seq)))
+        print('Figure: \'%s\', ways: %d'
+              % (figure.name, len(seq)))
 
         # debug
         # for path in seq:
@@ -202,7 +151,7 @@ def main(start_point):
 # step by step (recursively)
 def magic_func(current, figure, length):
     results = []
-    for next_pos in figures.get(figure)[current[-1]]:
+    for next_pos in figure.path_matrix[current[-1]]:
         sequence = current.copy()
         sequence.append(next_pos)
 
@@ -214,18 +163,25 @@ def magic_func(current, figure, length):
     return results
 
 
-# enter point
-if __name__ == "__main__":
+def main():
+    # get all known figures
+    figures = get_figures()
+
+    # get task field
+    field = get_field()
+
+    # build path matrix
+    # for field for each figure
+    generate_paths(field, figures)
+
     # generate random start point
-    start_here = randint(0, 9)
-
-    # launch path calculation
-    # based on manual path matrix
-    main(start_here)
-
-    # rebuilding path matrix
-    rebuild_matrix()
+    start_point = randint(0, 9)
 
     # launch path calculation
     # based on generated path matrix
-    main(start_here)
+    start(figures, start_point)
+
+
+# enter point
+if __name__ == "__main__":
+    main()
