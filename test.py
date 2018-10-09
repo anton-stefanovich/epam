@@ -4,19 +4,30 @@ from point import *
 
 
 # create field
-def get_field():
-    return Field(
-        [
-            ['1', '2', '3'],
-            ['4', '5', '6'],
-            ['7', '8', '9'],
-            ['*', '0', '#'],
-        ],
-        lambda x: x.isdigit()
-    )
+def get_field(name='phone'):
+    fields = {
+        'phone': Field(
+            [
+                ['1', '2', '3'],
+                ['4', '5', '6'],
+                ['7', '8', '9'],
+                ['*', '0', '#'],
+            ],
+            lambda x: x.isdigit()),
+
+        'random': Field(
+            [
+                ['1', '*', '2', '3', '4', '5', '6'],
+                ['7'],
+                ['8', '#', '9', '0'],
+            ],
+            lambda x: x.isdigit()),
+    }
+
+    return fields.get(name)
 
 
-# rebuild available matrix for the field
+# build movements matrix for the field
 def build_matrix(field, vectors, multipliable):
     available_matrix = dict()
 
@@ -92,18 +103,18 @@ def start(figures, start_point):
 # collecting all available path
 # step by step (recursively)
 def magic_func(current, figure, length):
-    results = []
+    sequences = []
     next_points = figure.path_matrix.get(current[-1])
     for next_point in next_points:
         sequence = current.copy()
         sequence.append(next_point)
 
-        results += (
-            [sequence]
-            if len(sequence) >= length
-            else magic_func(sequence, figure, length))
+        sequences += \
+            [sequence] \
+            if len(sequence) >= length \
+            else magic_func(sequence, figure, length)
 
-    return results
+    return sequences
 
 
 def main():
